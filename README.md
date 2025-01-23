@@ -43,7 +43,7 @@ New-AzManagementGroupDeployment -ManagementGroupId 'es' -Name 'lighthouse' -Loca
 
 ```ruby
 module "lighthouse_policy" {
-  source              = "github.com/Cloud-Direct/Azure-Lighthouse-Policy-Definition?ref=v0.1"
+  source              = "github.com/Cloud-Direct/Azure-Lighthouse-Policy-Definition?ref=v1.0"
   management_group_id = "es"
 }
 ```
