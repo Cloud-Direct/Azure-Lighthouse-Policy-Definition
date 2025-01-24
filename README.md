@@ -16,14 +16,14 @@ The example commands assume you are creating the policy definition at the manage
 ### Azure CLI with the ARM template
 
 ```shell
-uri="https://raw.githubusercontent.com/Cloud-Direct/Azure-Lighthouse-Policy-Definition/refs/heads/main/lighthouse.policy_definition.json"
+uri="https://raw.githubusercontent.com/Cloud-Direct/Azure-Lighthouse-Policy-Definition/refs/tags/v1.0/lighthouse.policy_definition.json"
 az deployment mg create --management-group-id es --name lighthouse --location uksouth --template-uri $uri
 ```
 
 ### PowerShell with the Bicep file
 
 ```powershell
-$uri = "https://raw.githubusercontent.com/Cloud-Direct/Azure-Lighthouse-Policy-Definition/refs/heads/main/lighthouse.policy_definition.bicep"
+uri="https://raw.githubusercontent.com/Cloud-Direct/Azure-Lighthouse-Policy-Definition/refs/tags/v1.0/lighthouse.policy_definition.bicep"
 New-AzManagementGroupDeployment -ManagementGroupId 'es' -Name 'lighthouse' -Location 'uksouth' -TemplateUri $uri
 ```
 
@@ -43,7 +43,7 @@ provider "azurerm" {
 
 module "lighthouse_definition" {
   for_each        = toset(["standard"])
-  source          = "github.com/Cloud-Direct/Azure-Lighthouse-Definition?ref=v0.1"
+  source          = "github.com/Cloud-Direct/Azure-Lighthouse-Definition?ref=v1.0"
   parms           = "lighthouse.${each.value}.parameters.json"
   subscription_id = var.subscription_id
 }
