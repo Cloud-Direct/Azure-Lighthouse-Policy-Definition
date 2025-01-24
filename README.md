@@ -13,16 +13,6 @@ The example commands assume you are creating the policy definition at the manage
 
 ## CLI examples
 
-
-### Terraform module
-
-```ruby
-module "lighthouse_policy" {
-  source              = "github.com/Cloud-Direct/Azure-Lighthouse-Policy-Definition?ref=v1.0"
-  management_group_id = "es"
-}
-```
-
 ### Azure CLI with the ARM template
 
 ```shell
