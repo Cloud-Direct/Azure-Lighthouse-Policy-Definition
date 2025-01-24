@@ -11,7 +11,7 @@ Azure Policy designed for management group assignment. The policy will automatic
 
 The example commands assume you are creating the policy definition at the management group es.
 
-## Examples
+## CLI examples
 
 
 ### Terraform module
@@ -35,6 +35,51 @@ az deployment mg create --management-group-id es --name lighthouse --location uk
 ```powershell
 $uri = "https://raw.githubusercontent.com/Cloud-Direct/Azure-Lighthouse-Policy-Definition/refs/heads/main/lighthouse.policy_definition.bicep"
 New-AzManagementGroupDeployment -ManagementGroupId 'es' -Name 'lighthouse' -Location 'uksouth' -TemplateUri $uri
+```
+
+## Terraform example
+
+This is a fuller example creating
+
+- the Azure Lighthouse definition(s)
+- the policy definition
+- creating the policy assignment(s) at the same management group scope
+
+```ruby
+provider "azurerm" {
+  features {}
+  subscription_id = var.subscription_id
+}
+
+module "lighthouse_definition" {
+  for_each        = toset(["standard"])
+  source          = "github.com/Cloud-Direct/Azure-Lighthouse-Definition?ref=v0.1"
+  parms           = "lighthouse.${each.value}.parameters.json"
+  subscription_id = var.subscription_id
+}
+
+module "lighthouse_policy" {
+  source              = "github.com/Cloud-Direct/Azure-Lighthouse-Policy-Definition?ref=v1.0"
+  management_group_id = "es"
+}
+
+resource "azurerm_management_group_policy_assignment" "lighthouse_policy" {
+  for_each             = toset(["standard"])
+  name                 = "lighthouse-policy"
+  location = "UK South"
+  policy_definition_id = module.lighthouse_policy.policy_definition_id
+  management_group_id  = module.lighthouse_policy.management_group_resource_id
+
+  parameters = jsonencode({
+    lighthouseDefinitionId = {
+      value = module.lighthouse_definition[each.key].id
+    }
+  })
+
+  identity {
+    type = "SystemAssigned"
+  }
+}
 ```
 
 ## Permissions
